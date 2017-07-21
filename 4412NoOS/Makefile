@@ -1,7 +1,5 @@
 
-SUBDIRS	:=  4412Dvr\
-	    	4412NoOS\
-        	4412Programe\
+SUBDIRS	:=  
 
 .PHONY: all
 all:$(SUBDIRS)
