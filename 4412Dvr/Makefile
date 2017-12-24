@@ -1,5 +1,5 @@
 
-SUBDIRS	:=  FrameBuffer\
+SUBDIRS	:=  
 
 .PHONY: all
 all:$(SUBDIRS)
