@@ -8,10 +8,21 @@
         [*]USB support -->
             <*>USB Gadget Support -->
                 <M>USB Gadget Drivers
-                <M>Ethernet Gadget (with CDC Ethernet support)
-                [*] RNDIS support
-                <M>CDC Composite Device (Ethernet and ACM)
+                  <M>Ethernet Gadget (with CDC Ethernet support)
+                  [*] RNDIS support
     ```
+
+## rndis_host.ko 这个驱动。一般发行版均已经编译好，直接运行即可。
+
+* 如果嵌入式开发板可以配置内核的rndis_host为动态模块
+  ```C
+    Location:
+    -> Device Drivers
+      -> Network device support
+        -> USB Network Adapters
+        -> Multi-purpose USB Networking Framework
+  ```
+
 * 编译内核
   * make zImage
   * 此时带有gadget 以及RNDIS | CDC 的内核就生成了

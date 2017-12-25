@@ -86,10 +86,16 @@
 ```bash
 #!/bin/bash
 mkdir -p ./image
+mkdir -p ./image/modules
 cd ./linux-3.5
 cp ./tiny4412_linux_defconfig .config
 make -j4
+make modules -j4
+make modules_install INSTALL_MOD_PATH=../image/modules
+
 cp ./arch/arm/boot/zImage ../image
+cd ../image/modules
+tar jcvf ../modules.tar.bz2 ./*
 ```
 
 ### 编译linux-ubuntu内核
@@ -97,10 +103,16 @@ cp ./arch/arm/boot/zImage ../image
 ```bash
 #!/bin/bash
 mkdir -p ./image
+mkdir -p ./image/modules
 cd ./linux-3.5
-cp ./tiny4412_ubuntu_defconfig .config
+cp ./tiny4412_ubuntu_defconfig_rndis .config
 make -j4
+make modules -j4
+make modules_install INSTALL_MOD_PATH=../image/modules
+
 cp ./arch/arm/boot/zImage ../image
+cd ../image/modules
+tar jcvf ../modules.tar.bz2 ./*
 ```
 
 ### 编译linux-android内核
@@ -108,10 +120,16 @@ cp ./arch/arm/boot/zImage ../image
 ```bash
 #!/bin/bash
 mkdir -p ./image
+mkdir -p ./image/modules
 cd ./linux-3.5
 cp ./tiny4412_android_defconfig .config
 make -j4
+make modules -j4
+make modules_install INSTALL_MOD_PATH=../image/modules
+
 cp ./arch/arm/boot/zImage ../image
+cd ../image/modules
+tar jcvf ../modules.tar.bz2 ./*
 ```
 
 **************************************************************************************
