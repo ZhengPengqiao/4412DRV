@@ -17,7 +17,10 @@
 #define DEVICE_NAME "tiny4412_leds"
 
 static int led_gpios[] = {
-	//EXYNOS4X12_GPM4(0)
+	EXYNOS4X12_GPM4(0),
+	EXYNOS4X12_GPM4(1),
+	EXYNOS4X12_GPM4(2),
+	EXYNOS4X12_GPM4(3),
 };
 
 #define LED_NUM		ARRAY_SIZE(led_gpios)
@@ -26,17 +29,16 @@ static int led_gpios[] = {
 static long tiny4412_leds_ioctl(struct file *filp, unsigned int cmd,
 		unsigned long arg)
 {
-	printk("[%s][%s]\n",__FILE__,__LINE__);
+	printk("[%s:%s]  %d\n",  __FILE__,  __FUNCTION__, __LINE__);
 	switch(cmd) {
 		case 0:
 		case 1:
-			//gpio_set_value(led_gpios[arg], !cmd);
-			printk(DEVICE_NAME": %d %d\n", arg, cmd);
+			gpio_set_value(led_gpios[arg], !cmd);
+			printk(DEVICE_NAME": LED%d=%u\n", arg, cmd);
 			break;
 		default:
 			return -EINVAL;
 	}
-
 	return 0;
 }
 
@@ -53,13 +55,32 @@ static struct miscdevice tiny4412_led_dev = {
 
 static int __init tiny4412_led_dev_init(void) {
 	int ret = 0;
-	printk("[%s][%s]\n",__FILE__,__LINE__);
+	int i;
+	
+	printk("[%s:%s]  %d\n",  __FILE__,  __FUNCTION__, __LINE__);
+
+	for (i = 0; i < LED_NUM; i++) {
+		ret = gpio_request(led_gpios[i], "LED");
+		if (ret) {
+			printk("%s: request GPIO %d for [LED%d] failed, ret = %d\n", DEVICE_NAME,
+					led_gpios[i], i, ret);
+			return ret;
+		}
+
+		s3c_gpio_cfgpin(led_gpios[i], S3C_GPIO_OUTPUT);
+		gpio_set_value(led_gpios[i], 1);
+	}
+	ret = misc_register(&tiny4412_led_dev);
 
 	return ret;
 }
 
 static void __exit tiny4412_led_dev_exit(void) {
-	printk("[%s][%s]\n",__FILE__,__LINE__);
+	int i = 0;
+	printk("[%s:%s]  %d\n",  __FILE__,  __FUNCTION__, __LINE__);
+	for (i = 0; i < LED_NUM; i++) {
+		gpio_free(led_gpios[i]);
+	}
 	misc_deregister(&tiny4412_led_dev);
 }
 
