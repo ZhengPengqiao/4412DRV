@@ -29,12 +29,11 @@ static int led_gpios[] = {
 static long tiny4412_leds_ioctl(struct file *filp, unsigned int cmd,
 		unsigned long arg)
 {
-	printk("[%s:%s]  %d\n",  __FILE__,  __FUNCTION__, __LINE__);
 	switch(cmd) {
 		case 0:
 		case 1:
 			gpio_set_value(led_gpios[arg], !cmd);
-			printk(DEVICE_NAME": LED%d=%u\n", arg, cmd);
+			printk(DEVICE_NAME": LED%d=%s\n", arg, cmd?"ON":"OFF");
 			break;
 		default:
 			return -EINVAL;
