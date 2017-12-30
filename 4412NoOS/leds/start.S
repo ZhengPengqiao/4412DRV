@@ -1,27 +1,27 @@
 .globl _start
 
 _start:
-	// ÉèÖÃGPM4CONµÄbit[0:4]£¬ÅäÖÃGPM4_0/1/2/3Òı½ÅÎªÊä³ö¹¦ÄÜ
+	// è®¾ç½®GPM4CONçš„bit[0:4]ï¼Œé…ç½®GPM4_0/1/2/3å¼•è„šä¸ºè¾“å‡ºåŠŸèƒ½
 	ldr r1, =0x110002E0 					
 	ldr r0, =0x00001111
 	str r0, [r1]
 
 	mov r2, #0x2000
 led_blink:
-	// ÉèÖÃGPM4DATµÄbit[0:3]£¬Ê¹GPM4_0/1/2/3Òı½ÅÊä³öµÍµçÆ½£¬LEDÁÁ
+	// è®¾ç½®GPM4DATçš„bit[0:3]ï¼Œä½¿GPM4_0/1/2/3å¼•è„šè¾“å‡ºä½ç”µå¹³ï¼ŒLEDäº®
 	ldr r1, =0x110002E4					
 	mov r0, #0
 	str r0, [r1]
 
-	// ÑÓÊ±
+	// å»¶æ—¶
 	bl delay							
 
-	// ÉèÖÃGPM4DATµÄbit[0:3]£¬Ê¹GPM4_0/1/2/3Òı½ÅÊä³ö¸ßµçÆ½£¬LEDÃğ
+	// è®¾ç½®GPM4DATçš„bit[0:3]ï¼Œä½¿GPM4_0/1/2/3å¼•è„šè¾“å‡ºé«˜ç”µå¹³ï¼ŒLEDç­
 	ldr r1, =0x110002E4 					
 	mov r0, #0xf
 	str r0, [r1]
 
-	// ÑÓÊ±
+	// å»¶æ—¶
 	bl delay	
 
 	sub r2, r2, #1
@@ -40,4 +40,3 @@ delay_loop:
 	sub r0, r0, #1
 	bne delay_loop
 	mov pc, lr
-
