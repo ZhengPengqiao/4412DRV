@@ -313,7 +313,7 @@
             查看刚才烧录的启动参数是否成功。
             ```
 
-    1. 烧写kernel, system, ramdisk
+    1. 烧写kernel, system, ramdisk (这里是将kernal,system,ramdisk焼写到相应分区 （分区位置在uboot中定义）)
     ```C
         下面烧kernel, system,ramdisk和SD卡烧录一样。
         u-boot继续输入

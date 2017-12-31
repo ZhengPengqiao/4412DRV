@@ -1,5 +1,26 @@
 # 使用SD卡启动Android（**还未实现**)
 
+## 编译android 源代码
+
+* Q:prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.11-4.6//x86_64-linux/include/c++/4.6/bits/basic_string.h:235: error: unsupported reloc 43
+* A:cp /usr/bin/ld.gold prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.11-4.6/x86_64-linux/bin/ld 
+
+## 将android system更改为默认可读写
+
+* Android 系统默认情况下,system 分区是只读 mount 的,因此无法进行往里写数据的。
+* 可以用 adb 命令 adb remount 重新 mount 一下.
+* 也可通过在板子上,输入以下命令重新 mount 一下 system 分区令其可读可写:
+  * mount -o remount /dev/block/mmcblk0p2 /system
+* 该命令只对当前启动有效,重启后会恢复为只读。
+* 如想 system 分区一直处于可读写,可能过修改 Android 源代码中的以下文件:
+  ```C
+    device/friendly-arm/tiny4412/conf/fstab.tiny4412
+    将文件以下内容:
+    /dev/block/mmcblk0p2
+    /system ext4 ro wait
+    /system ext4 rw wait
+  ```
+
 ## 制作文件镜像，或者挂在文件镜像
 
 * 得到system.img
@@ -13,9 +34,10 @@
 ## android分区及uboot引导 (**还没有搞好**)
 
 ```text
-/dev/block/mmcblk0p2 /system ext4
-/dev/block/mmcblk0p3 /data   ext4
-/dev/block/mmcblk0p4 /cache  ext4
+文件：device/friendly-arm/tiny4412/conf/fstab.tiny4412
+/dev/block/mmcblk0p2 /system ext4 ro     wait
+/dev/block/mmcblk0p4 /cache  ext4 noatime,nosuid,nodev,nomblk_io_submit,errors=panic wait
+/dev/block/mmcblk0p3 /data   ext4 noatime,nosuid,nodev,nomblk_io_submit,noauto_da_alloc,errors=panic wait
 
 'console=ttySAC0,115200n8 androidboot.console=ttySAC0 ctp=2 skipcali=y vmalloc=384m ethmac=1C:6F:65:34:51:7E androidboot.selinux=permissive lcd=S702'
 ```
