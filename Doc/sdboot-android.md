@@ -16,9 +16,8 @@
   ```C
     device/friendly-arm/tiny4412/conf/fstab.tiny4412
     将文件以下内容:
-    /dev/block/mmcblk0p2
-    /system ext4 ro wait
-    /system ext4 rw wait
+    /dev/block/mmcblk0p2 /system ext4 ro wait
+    /dev/block/mmcblk0p2 /system ext4 rw wait
   ```
 
 ## 制作文件镜像，或者挂在文件镜像
@@ -31,16 +30,26 @@
 * $./make_ext4fs -s -l 512M -a system system_new.img system    #512M表分区大小 第一个system表示挂载点为/system, 第二个system表示system目录。
 * 新生成的system_new.img就可以用来烧写了。
 
-## android分区及uboot引导 (**还没有搞好**)
+## 启动android时，也需要linux的最小文件系统，（Ramdisk.img）
 
-```text
-文件：device/friendly-arm/tiny4412/conf/fstab.tiny4412
-/dev/block/mmcblk0p2 /system ext4 ro     wait
-/dev/block/mmcblk0p4 /cache  ext4 noatime,nosuid,nodev,nomblk_io_submit,errors=panic wait
-/dev/block/mmcblk0p3 /data   ext4 noatime,nosuid,nodev,nomblk_io_submit,noauto_da_alloc,errors=panic wait
+1. 引导方式不同，但需要的东西是一样的。
+1. 从EMMC启动时:
+    1. 从EMMC启动的时候，ramdisk是烧录到ramdisk分区的。启动的时候，加载ramdisk分区到内存，然后启动
+    1. bootcmd=movi read kernel 0 40008000;movi read ramdisk 0 41000000 400000;bootm 40008000 41000000
+1. 从SD卡启动时：
+    1. 我们也可以继续使用ramdisk分区，或者将最小文件系统拷贝到指定分区
+    1. 然后启动的时候在bootatgs中指定：root={ramdisk分区} init={init名字}
 
-'console=ttySAC0,115200n8 androidboot.console=ttySAC0 ctp=2 skipcali=y vmalloc=384m ethmac=1C:6F:65:34:51:7E androidboot.selinux=permissive lcd=S702'
-```
+## android分区及uboot引导
+
+  ```text
+  文件：device/friendly-arm/tiny4412/conf/fstab.tiny4412
+  /dev/block/mmcblk0p2 /system ext4 ro     wait
+  /dev/block/mmcblk0p4 /cache  ext4 noatime,nosuid,nodev,nomblk_io_submit,errors=panic wait
+  /dev/block/mmcblk0p3 /data   ext4 noatime,nosuid,nodev,nomblk_io_submit,noauto_da_alloc,errors=panic wait
+
+  setenv bootargs 'root={ramdisk分区} init={init名字} console=ttySAC0,115200n8 androidboot.console=ttySAC0 ctp=2 skipcali=y vmalloc=384m ethmac=1C:6F:65:34:51:7E androidboot.selinux=permissive lcd=S702'
+  ```
 
 ### 使用SD卡启动 Tiny4412 并烧写Android
 
@@ -88,8 +97,7 @@
 * 如果是使用HD700，则烧写完成后直接重启Tiny4412 即可自动启动 Android
 * 如果是使用S700，则需要在uboot上设置kernel命令行参数:
     ```C
-    setenv bootargs console=ttySAC0,115200n8 androidboot.console=ttySAC0 lcd=S700
-    saveenv
+        bootargs lcd=S700
     ```
 * 然后重启Tiny4412即可。
 
