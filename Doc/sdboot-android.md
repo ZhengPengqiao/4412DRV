@@ -5,6 +5,15 @@
 * Q:prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.11-4.6//x86_64-linux/include/c++/4.6/bits/basic_string.h:235: error: unsupported reloc 43
 * A:cp /usr/bin/ld.gold prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.11-4.6/x86_64-linux/bin/ld 
 
+## 启动后,设备的名称
+
+* 从EMMC中启动的时候
+  * EMMC === mmcblk0
+  * SD   === mmcblk1
+* 从SD卡启动的时候:
+  * EMMC === mmcblk1
+  * SD   === mmcblk0
+
 ## 将android system更改为默认可读写
 
 * Android 系统默认情况下,system 分区是只读 mount 的,因此无法进行往里写数据的。
@@ -37,8 +46,8 @@
     1. 从EMMC启动的时候，ramdisk是烧录到ramdisk分区的。启动的时候，加载ramdisk分区到内存，然后启动
     1. bootcmd=movi read kernel 0 40008000;movi read ramdisk 0 41000000 400000;bootm 40008000 41000000
 1. 从SD卡启动时：
-    1. 我们也可以继续使用ramdisk分区，或者将最小文件系统拷贝到指定分区
-    1. 然后启动的时候在bootatgs中指定：root={ramdisk分区} init={init名字}
+    1. 我们也可以继续使用ramdisk分区.
+    1. 或者将最小文件系统拷贝到指定分区,然后启动的时候在bootatgs中指定：root={ramdisk分区} init={init名字}
 
 ## android分区及uboot引导
 
@@ -49,6 +58,19 @@
   /dev/block/mmcblk0p3 /data   ext4 noatime,nosuid,nodev,nomblk_io_submit,noauto_da_alloc,errors=panic wait
 
   setenv bootargs 'root={ramdisk分区} init={init名字} console=ttySAC0,115200n8 androidboot.console=ttySAC0 ctp=2 skipcali=y vmalloc=384m ethmac=1C:6F:65:34:51:7E androidboot.selinux=permissive lcd=S702'
+  ```
+
+## 继续使用EMMC启动时使用的内核，和uboot,只更换android系统。
+
+  ```C
+      /dev/block/mmcblk0p2 /system ext4 ro     wait
+      /dev/block/mmcblk0p4 /cache  ext4 noatime,nosuid,nodev,nomblk_io_submit,errors=panic wait
+      /dev/block/mmcblk0p3 /data   ext4 noatime,nosuid,nodev,nomblk_io_submit,noauto_da_alloc,errors=panic wait
+    更换为
+      /dev/block/mmcblk1p2 /system ext4 ro     wait
+      /dev/block/mmcblk1p4 /cache  ext4 noatime,nosuid,nodev,nomblk_io_submit,errors=panic wait
+      /dev/block/mmcblk1p3 /data   ext4 noatime,nosuid,nodev,nomblk_io_submit,noauto_da_alloc,errors=panic wait
+      将android相应的东西拷贝到SD卡分区中，这里更换linux系统启动时，挂在的分区，之前是挂在EMMC的分区。可以更改为挂在SD卡中的分区，这样来启动SD卡中的android的系统。但是内核和最小文件系统使用的和EMMC启动的时候是一样的
   ```
 
 ### 使用SD卡启动 Tiny4412 并烧写Android
