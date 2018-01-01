@@ -2,6 +2,7 @@ led.bin: start.o
 	arm-linux-ld -Ttext 0x0 -o led.elf $^
 	arm-linux-objcopy -O binary led.elf u-boot.bin
 	arm-linux-objdump -D led.elf > led_elf.dis	
+	cp u-boot.bin ../../Doc/
 	
 %.o : %.S
 	arm-linux-gcc -o $@ $< -c

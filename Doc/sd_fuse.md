@@ -1,5 +1,47 @@
 # sd_fuse文件夹介绍
 
+## **mkbl2文件修改,一定要注意**
+
+* 文件:V310-EVT1-mkbl2.c
+    ```C
+    #if 0   //代码大于14K
+        //如果裸机程序大于14K,则需要将程序重定向到别的位置，将程序前14K修改为具有校验码的程序，
+        //在14K代码内，需要实现代码重定位。
+        if ( BufLen > fileLen )
+        {
+            printf("Usage: unsupported size\n");
+            free(Buf);
+            fclose(fp);
+            return -1;
+        }
+
+        nbytes = fread(Buf, 1, BufLen, fp);
+
+        if ( nbytes != BufLen )
+        {
+            printf("source file read error\n");
+            free(Buf);
+            fclose(fp);
+            return -1;
+        }
+
+    #else       //代码小于14K
+
+        //焼写裸机程序时，裸机程序一般14K,所以这里按照规定，在14K位置添加校验码，将裸机程序转为转换为合格的bin文件
+        if ( fileLen >  (BufLen-16))
+        {
+            printf("Usage: unsupported size,size more than 14K \n");
+            free(Buf);
+            fclose(fp);
+            return -1;
+        }
+
+        nbytes = fread(Buf, 1, BufLen, fp);
+
+    #endif
+    ```
+* 此程序是生成bl2.bin程序用的,这里为了下载裸机程序,修改了一点代码,当裸机程序小于14K时,可以直接使用生成的bl2.bin就行,bl2.bin就是程序的前14K-4Bytes数据, 如果程序大于14K,需要在前14K数据中进行程序重定向.
+
 ## 裸机程序下载
 
 * 裸机焼写时，将需要焼写的代码，放在Doc中。
