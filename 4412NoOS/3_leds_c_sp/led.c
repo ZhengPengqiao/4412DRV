@@ -8,7 +8,7 @@ void delay(int r0)					// 延时
         ;
 }
 
-void led_blink()					// LED闪烁
+void main() 						// LED闪烁
 {
 	GPM4CON = 0x00001111;			// 配置引脚
 	while(1)							

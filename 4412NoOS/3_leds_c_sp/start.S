@@ -6,11 +6,12 @@ _start:
 	mov	r1, #0
 	str	r1, [r0]
 
-	// 设置栈，以便调用c函数
-	ldr	sp, =0x02050000				
+	// 设置栈，以便调用c函数,
+	// exynox4412内部的256K的位置0x0202_0000~0x0206_0000
+	ldr	sp, =0x02060000
 
 	// 调用c函数,LED闪烁
-	bl	led_blink							
+	bl	main							
 
 halt:
 	b halt
