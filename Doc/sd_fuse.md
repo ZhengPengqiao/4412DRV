@@ -267,7 +267,7 @@
                 提示等待数据输入，这里就是等待我们从PC端通过DNW传送数据过来。
 
                 此时在PC端终端串口，cd到u-boot目录所在路径
-                user@~/u-boot/: 
+                user@~/u-boot/:
                 输入： dwn sd_fuse/tiny4412/E4412_N.bl1.bin
 
                 此时u-boot中断会提示传送校验完成，此时已经把bl1.bin通过USB传送到了memeory的0xc0000000起始地址，大小8KB.

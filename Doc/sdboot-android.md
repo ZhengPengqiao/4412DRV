@@ -114,6 +114,7 @@
         fastboot flash bootloader ../../u-boot.bin
         fastboot flash tzsw E4412_tzsw.bin
       ```
+
 ### 使用SD卡启动 Android
 
 * 如果是使用HD700，则烧写完成后直接重启Tiny4412 即可自动启动 Android
