@@ -50,8 +50,7 @@ int main (int argc, char *argv[])
 	{
 		printf("Usage: file size is larger than 14K-4\n");
 		nbytes = fread(Buf, 1, BufLen-4, fp);
-
-		if ( nbytes != BufLen )
+		if ( nbytes != BufLen-4 )
 		{
 			printf("source file read error\n");
 			free(Buf);
