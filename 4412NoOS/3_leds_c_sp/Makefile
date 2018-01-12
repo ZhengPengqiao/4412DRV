@@ -2,7 +2,7 @@ DEVNAME=sdc
 
 led_sp.bin: start.o led.o
 	arm-linux-ld -Ttext 0x0 -o led_sp.elf $^
-	arm-linux-objcopy -O binary led_sp.elf u-boot.bin
+	arm-linux-objcopy -O binary led_sp.elf boot.bin
 	arm-linux-objdump -D led_sp.elf > led_sp_elf.dis
 	
 %.o : %.S

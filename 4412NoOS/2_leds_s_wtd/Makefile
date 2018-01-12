@@ -2,7 +2,7 @@ DEVNAME=sdc
 
 led_wtd.bin: start.o delay.o
 	arm-linux-ld -Ttext 0x0 -o led_wtd.elf $^
-	arm-linux-objcopy -O binary led_wtd.elf u-boot.bin
+	arm-linux-objcopy -O binary led_wtd.elf boot.bin
 	arm-linux-objdump -D led_wtd.elf > led_wtd_elf.dis
 
 %.o : %.S

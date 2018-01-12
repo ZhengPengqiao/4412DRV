@@ -2,7 +2,7 @@ DEVNAME=sdc
 
 led_icache.bin: start.o led.o
 	arm-linux-ld -Ttext 0x0 -o led_icache.elf $^
-	arm-linux-objcopy -O binary led_icache.elf u-boot.bin
+	arm-linux-objcopy -O binary led_icache.elf boot.bin
 	arm-linux-objdump -D led_icache.elf > led_icache_elf.dis
 
 

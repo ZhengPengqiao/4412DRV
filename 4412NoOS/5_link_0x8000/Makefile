@@ -1,12 +1,12 @@
 DEVNAME=sdc
 
-led.bin: start.o 
-	arm-linux-ld -Ttext 0x0 -o led.elf $^
-	arm-linux-objcopy -O binary led.elf boot.bin
-	arm-linux-objdump -D led.elf > led_elf.dis	
+link.bin: start.o main.o 
+	arm-linux-ld -Tlink.lds -o link.elf $^
+	arm-linux-objcopy -O binary link.elf boot.bin
+	arm-linux-objdump -D link.elf > link_elf.dis
 	
 %.o : %.S
-	arm-linux-gcc -o $@ $< -c
+	arm-linux-gcc -o $@ $< -c 
 
 %.o : %.c
 	arm-linux-gcc -o $@ $< -c 

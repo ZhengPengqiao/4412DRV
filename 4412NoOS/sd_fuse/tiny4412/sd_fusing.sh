@@ -51,11 +51,12 @@ fi
 
 ####################################
 # check files
-E4412_UBOOT=$RUNDIR/u-boot.bin
+E4412_BOOT=$RUNDIR/boot.bin
+E4412_USER=$RUNDIR/user.bin
 MKBL2=$SCRIPTDIR/../mkbl2
 
-if [ ! -f ${E4412_UBOOT} ]; then
-	echo "Error: u-boot.bin NOT found, please build it & try again."
+if [ ! -f ${E4412_BOOT} ]; then
+	echo "Error: boot.bin NOT found, please build it & try again."
 	exit -1
 fi
 
@@ -65,14 +66,14 @@ if [ ! -f ${MKBL2} ]; then
 fi
 
 #<make bl2>
-${MKBL2} ${E4412_UBOOT} bl2.bin 14336
+${MKBL2} ${E4412_BOOT} bl2.bin 14336
 
 ####################################
 # fusing images
 
 signed_bl1_position=1
 bl2_position=17
-uboot_position=49
+user_position=49
 tzsw_position=705
 
 #<BL1 fusing>
@@ -87,8 +88,13 @@ dd iflag=dsync oflag=dsync if=$RUNDIR/bl2.bin of=$1 seek=$bl2_position
 
 #<u-boot fusing>
 echo "---------------------------------------"
-echo "u-boot fusing"
-dd iflag=dsync oflag=dsync if=${E4412_UBOOT} of=$1 seek=$uboot_position
+echo "user.bin fusing"
+if [ ! -f ${E4412_USER} ]; then
+	echo "W:NOT Found: ${E4412_USER}"
+    echo "W:NO Fuse To SDCard: ${E4412_USER}"
+else
+    dd iflag=dsync oflag=dsync if=${E4412_USER} of=$1 seek=$user_position
+fi
 
 #<TrustZone S/W fusing>
 echo "---------------------------------------"
@@ -101,6 +107,6 @@ sync
 ####################################
 #<Message Display>
 echo "---------------------------------------"
-echo "U-boot image is fused successfully."
+echo "boot.bin user.bin image is fused successfully."
 echo "Eject SD card and insert it again."
 
