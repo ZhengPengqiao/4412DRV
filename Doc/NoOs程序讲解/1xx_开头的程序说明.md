@@ -11,3 +11,4 @@
 * 也可以将文件放入sd卡的fat分区中,加载进RAM并运行
   * fatload mmc 0:1 0x50000000 main.bin
   * go 0x50000000
+* setenv bootuser 'fatload mmc 0:1 0x50000000 main.bin; go 0x50000000'
