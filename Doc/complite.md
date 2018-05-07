@@ -8,7 +8,8 @@
 
 * 配置编译环境
   * arm-linux-gcc-4.5.1-v6-vfp-20120301.tgz，并设置好环境变量PATH，保证可以正常使用。
-* 解压并编译uboot
+* 解压并编译ubootcd sd_fuse/tiny4412
+    sudo ./sd_fusing.sh /dev/sdb
   ```C
   tar xzf uboot_tiny4412_0929.tar.gz
   cd uboot_tiny4412

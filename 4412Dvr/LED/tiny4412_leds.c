@@ -87,5 +87,5 @@ module_init(tiny4412_led_dev_init);
 module_exit(tiny4412_led_dev_exit);
 
 MODULE_LICENSE("GPL");
-MODULE_AUTHOR("FriendlyARM Inc.");
+MODULE_AUTHOR("ZhengPengqiao");
 
