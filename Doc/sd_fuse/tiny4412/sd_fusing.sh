@@ -8,9 +8,9 @@
 #
 ####################################
 
-if [ -z $1 ]
+if [ -z $2 ]
 then
-    echo "usage: ./sd_fusing.sh <SD Reader's device file>"
+    echo "usage: ./sd_fusing.sh <SD Reader's device file>" u-boot.bin
     exit 0
 fi
 
@@ -38,11 +38,20 @@ if [ ${BDEV_SIZE} -gt 32000000 ]; then
 	exit 1
 fi
 
+tiny4412_Path=$(readlink -f "$(dirname "$0")")
+
 ####################################
 # check files
 
-E4412_UBOOT=../../u-boot.bin
-MKBL2=../mkbl2
+E4412_UBOOT=$2
+MKBL2=$tiny4412_Path/../mkbl2
+
+echo E4412_UBOOT	= $(pwd)/$E4412_UBOOT
+echo MKBL2			= $MKBL2
+echo E4412_UBOOT	= $tiny4412_Path/E4412_N.bl1.bin
+echo bl2.bin		= $tiny4412_Path/bl2.bin
+echo E4412_tzsw.bin	= $tiny4412_Path/E4412_tzsw.bin
+echo device	= $1
 
 if [ ! -f ${E4412_UBOOT} ]; then
 	echo "Error: u-boot.bin NOT found, please build it & try again."
@@ -68,12 +77,12 @@ tzsw_position=705
 #<BL1 fusing>
 echo "---------------------------------------"
 echo "BL1 fusing"
-dd iflag=dsync oflag=dsync if=./E4412_N.bl1.bin of=$1 seek=$signed_bl1_position
+dd iflag=dsync oflag=dsync if=$tiny4412_Path/E4412_N.bl1.bin of=$1 seek=$signed_bl1_position
 
 #<BL2 fusing>
 echo "---------------------------------------"
 echo "BL2 fusing"
-dd iflag=dsync oflag=dsync if=./bl2.bin of=$1 seek=$bl2_position
+dd iflag=dsync oflag=dsync if=$tiny4412_Path/bl2.bin of=$1 seek=$bl2_position
 
 #<u-boot fusing>
 echo "---------------------------------------"
@@ -83,7 +92,7 @@ dd iflag=dsync oflag=dsync if=${E4412_UBOOT} of=$1 seek=$uboot_position
 #<TrustZone S/W fusing>
 echo "---------------------------------------"
 echo "TrustZone S/W fusing"
-dd iflag=dsync oflag=dsync if=./E4412_tzsw.bin of=$1 seek=$tzsw_position
+dd iflag=dsync oflag=dsync if=$tiny4412_Path/E4412_tzsw.bin of=$1 seek=$tzsw_position
 
 #<flush to disk>
 sync

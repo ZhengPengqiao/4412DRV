@@ -43,12 +43,13 @@ int main (int argc, char *argv[])
 	fileLen = ftell(fp);
 	fseek(fp, 0L, SEEK_SET);
 
+	printf("BufLen=%d  fileLen=%d\n", BufLen , fileLen);
 	
 	// 如果裸机程序大于14K-4,则需要将程序重定向到别的位置，将程序前14K-4修改为具有校验码的程序，在14K-4代码内，
 	// 需要实现代码重定位。
 	if ( (BufLen - 4) < fileLen )
 	{
-		printf("Usage: file size is larger than 14K-4\n");
+		printf("file size is larger than 14K-4\n");
 		nbytes = fread(Buf, 1, BufLen-4, fp);
 		if ( nbytes != BufLen-4 )
 		{
@@ -62,7 +63,7 @@ int main (int argc, char *argv[])
 	else  //(BufLen - 4) >= fileLen
 	{
 		//程序小于14K-4, 所以可以全部写入BL2.bin中,不用重定位代码
-		printf("Usage: file size is less than 14K-4\n");
+		printf("file size is less than 14K-4\n");
 		nbytes = fread(Buf, 1, BufLen-4, fp);
 		if ( nbytes != fileLen )
 		{
