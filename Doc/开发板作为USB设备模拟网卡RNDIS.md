@@ -3,6 +3,7 @@
 ## 对内核做如下配置
 
 * make menuconfig
+
     ```c
     Device Drivers -->
         [*]USB support -->
@@ -12,9 +13,10 @@
                   [*] RNDIS support
     ```
 
-## rndis_host.ko 这个驱动。一般发行版均已经编译好，直接运行即可。
+## rndis_host.ko 这个驱动。一般发行版均已经编译好，直接运行即可
 
 * 如果嵌入式开发板可以配置内核的rndis_host为动态模块
+
   ```C
     Location:
     -> Device Drivers
@@ -32,6 +34,7 @@
 * 虽然内核是生成了,但是居然WINDOWS检测不到设备,查阅开发板的手册之后才知道,USB 从设备还有一个USB_EN信号,高电平的时候USB SLAVE才会使用,所以下一步就得修改BOOTLOADER了
   * 根据我的情况,控制USB_EN的IO口是GPC5
   * 找到初始化IO口的函数.根据S3C2440芯片手册做如下修改(兰色为修改或添加的代码)
+
     ```C
     void Port_Init(void)
     {
@@ -57,7 +60,9 @@
     EXTINT2 = 0x22222222; // EINT[23:16]
     }
     ```
+
   * 说明:
+  
     ```C
     GPCCON = 0xaaaaa6aa; //根据S3C2440的芯片手册gpc5[11:10]为控制该IO口的寄存器,所以第11,10位为分别为1,0
     GPCDAT = 0x0020; // 数据寄存器,1为高电平,所以第5位为1
